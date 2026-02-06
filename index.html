@@ -1,0 +1,481 @@
+import React, { useState, useEffect } from 'react';
+import { Menu, X, Shield, Users, TrendingUp, BookOpen, CheckCircle, Target, Globe, Briefcase, Moon, Sun, ArrowRight, Layout } from 'lucide-react';
+
+const BazartLanding = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Efecto para el menú flotante al hacer scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setIsMenuOpen(false);
+    }
+  };
+
+  // Estilos de gradiente inline para asegurar que se rendericen sin config externa
+  const lightGradient = {
+    background: 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(111, 0, 255, 0.15), transparent), linear-gradient(to bottom, #ffffff 0%, #f1f5f9 100%)'
+  };
+
+  const darkGradient = {
+    background: 'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(111, 0, 255, 0.25), transparent), linear-gradient(to bottom, #0f172a 0%, #020617 100%)'
+  };
+
+  return (
+    <div className={`min-h-screen font-sans transition-colors duration-300 ${isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-white text-slate-800'}`}>
+      
+      {/* --- NAVEGACIÓN FLOTANTE --- */}
+      <nav 
+        className={`fixed w-full z-50 transition-all duration-300 border-b ${
+          isScrolled 
+            ? (isDarkMode ? 'bg-slate-950/90 border-slate-800' : 'bg-white/90 border-slate-200') + ' backdrop-blur-md shadow-sm py-3' 
+            : 'bg-transparent border-transparent py-5'
+        }`}
+      >
+        <div className="container mx-auto px-6 flex justify-between items-center">
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <div className={`font-bold text-2xl tracking-tighter cursor-pointer ${
+              isDarkMode ? 'text-white' : 'text-slate-900'
+            }`} onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
+              BAZART<span className="text-[#6f00ff]">.ECO</span>
+            </div>
+          </div>
+          
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8 font-medium text-sm">
+            {[
+              { id: 'problema', label: 'El Desafío' },
+              { id: 'solucion', label: 'El Laboratorio' },
+              { id: 'sostenibilidad', label: 'Sostenibilidad' },
+              { id: 'aliados', label: 'Aliados' },
+            ].map((item) => (
+              <button 
+                key={item.id}
+                onClick={() => scrollToSection(item.id)} 
+                className={`transition-colors ${
+                  isDarkMode 
+                    ? 'text-slate-300 hover:text-[#6f00ff]' 
+                    : 'text-slate-600 hover:text-[#6f00ff]'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+
+            {/* Theme Toggle */}
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`p-2 rounded-full transition-colors ${
+                isDarkMode ? 'bg-slate-800 text-yellow-400' : 'bg-slate-100 text-slate-600'
+              }`}
+              title={isDarkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+            >
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+
+            <button className="bg-[#6f00ff] text-white px-5 py-2.5 rounded-full hover:bg-[#5a00cc] transition-all shadow-lg shadow-purple-500/20 font-semibold flex items-center gap-2">
+              Sumarse
+              <ArrowRight size={16} />
+            </button>
+          </div>
+
+          {/* Mobile Menu Controls */}
+          <div className="flex items-center gap-4 md:hidden">
+             <button 
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`p-2 rounded-full transition-colors ${
+                isDarkMode ? 'bg-slate-800 text-yellow-400' : 'bg-slate-100 text-slate-600'
+              }`}
+            >
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button 
+              className={isDarkMode ? 'text-white' : 'text-slate-900'} 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMenuOpen && (
+          <div className={`md:hidden absolute top-full left-0 w-full shadow-xl py-6 flex flex-col items-center space-y-6 ${isDarkMode ? 'bg-slate-900 border-b border-slate-800' : 'bg-white border-b border-slate-100'}`}>
+            <button onClick={() => scrollToSection('problema')} className={isDarkMode ? 'text-slate-300' : 'text-slate-600'}>El Desafío</button>
+            <button onClick={() => scrollToSection('solucion')} className={isDarkMode ? 'text-slate-300' : 'text-slate-600'}>El Laboratorio</button>
+            <button onClick={() => scrollToSection('sostenibilidad')} className={isDarkMode ? 'text-slate-300' : 'text-slate-600'}>Sostenibilidad</button>
+            <button onClick={() => scrollToSection('aliados')} className={isDarkMode ? 'text-slate-300' : 'text-slate-600'}>Aliados</button>
+            <button className="bg-[#6f00ff] text-white px-8 py-3 rounded-full font-bold">Sumarse</button>
+          </div>
+        )}
+      </nav>
+
+      {/* --- HERO SECTION --- */}
+      <header 
+        className="relative min-h-screen flex items-center pt-20 overflow-hidden"
+        style={isDarkMode ? darkGradient : lightGradient}
+      >
+        <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
+          
+          {/* Left Content */}
+          <div className="text-center md:text-left pt-10 md:pt-0">
+            <div className={`inline-flex items-center gap-2 py-1 px-3 rounded-full text-xs font-bold mb-6 border ${
+              isDarkMode 
+                ? 'bg-[#6f00ff]/10 text-[#a855f7] border-[#6f00ff]/20' 
+                : 'bg-[#6f00ff]/5 text-[#6f00ff] border-[#6f00ff]/10'
+            }`}>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#6f00ff] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#6f00ff]"></span>
+              </span>
+              POSTULACIÓN UNESCO-ASCHBERG TRACK 2
+            </div>
+            
+            <h1 className={`text-5xl md:text-7xl font-bold leading-tight mb-6 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+              Blindando el <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#6f00ff] to-[#a855f7]">
+                Estatus del Artista
+              </span>
+            </h1>
+            
+            <p className={`text-lg md:text-xl mb-8 leading-relaxed max-w-lg mx-auto md:mx-0 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+              Un <strong>laboratorio piloto</strong> para proteger la libertad artística, asegurar remuneración justa y conectar talento con demanda ética.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+              <button onClick={() => scrollToSection('aliados')} className="bg-[#6f00ff] text-white px-8 py-4 rounded-full font-bold hover:bg-[#5a00cc] transition-all shadow-xl shadow-[#6f00ff]/20 flex justify-center items-center gap-2">
+                Ver Red de Aliados
+              </button>
+              <button onClick={() => scrollToSection('solucion')} className={`px-8 py-4 rounded-full font-bold border transition-all flex justify-center items-center gap-2 ${
+                isDarkMode 
+                  ? 'border-slate-700 hover:bg-slate-800 text-white' 
+                  : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+              }`}>
+                Conocer el Modelo
+              </button>
+            </div>
+
+            <div className="mt-12 flex items-center justify-center md:justify-start gap-4 text-sm text-slate-500">
+               <div className="flex -space-x-2">
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-[10px] font-bold ${isDarkMode ? 'border-slate-950 bg-slate-800 text-slate-400' : 'border-white bg-slate-100 text-slate-600'}`}>U</div>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-[10px] font-bold ${isDarkMode ? 'border-slate-950 bg-slate-800 text-slate-400' : 'border-white bg-slate-100 text-slate-600'}`}>T</div>
+                  <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-[10px] font-bold ${isDarkMode ? 'border-slate-950 bg-slate-800 text-slate-400' : 'border-white bg-slate-100 text-slate-600'}`}>B</div>
+               </div>
+               <p>Respaldado por una coalición multisectorial</p>
+            </div>
+          </div>
+
+          {/* Right Image */}
+          <div className="relative h-[500px] w-full hidden md:block">
+             {/* Decorative Elements */}
+             <div className="absolute top-10 right-10 w-64 h-64 bg-[#6f00ff] rounded-full blur-[100px] opacity-20 animate-pulse"></div>
+             <div className="absolute bottom-10 left-10 w-64 h-64 bg-amber-400 rounded-full blur-[100px] opacity-20"></div>
+             
+             {/* Main Image Container */}
+             <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
+                <img 
+                  src="https://images.unsplash.com/photo-1547891654-e66ed7ebb968?q=80&w=2070&auto=format&fit=crop" 
+                  alt="Arte Abstracto Fluido" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                
+                {/* Overlay Card */}
+                <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-4 rounded-xl shadow-lg border border-white/50">
+                   <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#6f00ff] flex items-center justify-center text-white">
+                        <Shield size={20} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-slate-500 uppercase">Meta del Proyecto</p>
+                        <p className="text-sm font-bold text-slate-900">Validar un modelo de mercado justo</p>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+      </header>
+
+      {/* --- PROBLEMA (CONTEXTO) --- */}
+      <section id="problema" className={`py-24 ${isDarkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <div className="container mx-auto px-6">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className={`text-3xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>La Realidad del Sector</h2>
+            <p className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>
+              A pesar del talento, la precariedad laboral erosiona la libertad artística. Identificamos tres barreras críticas que nuestro laboratorio busca romper.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { 
+                icon: <Briefcase size={28} />, 
+                title: "Informalidad Extrema", 
+                desc: "Pagos tardíos, ausencia de contratos escritos y trabajo a cambio de 'visibilidad' en lugar de remuneración digna." 
+              },
+              { 
+                icon: <Shield size={28} />, 
+                title: "Desprotección de Derechos", 
+                desc: "Desconocimiento sobre propiedad intelectual, derechos de imagen y mecanismos de protección ante la censura." 
+              },
+              { 
+                icon: <Target size={28} />, 
+                title: "Demanda Desconectada", 
+                desc: "Empresas (turismo, eventos) quieren contratar cultura local, pero carecen de canales curados y estándares éticos." 
+              }
+            ].map((card, idx) => (
+              <div key={idx} className={`p-8 rounded-2xl border transition-all hover:-translate-y-1 ${
+                isDarkMode 
+                  ? 'bg-slate-950 border-slate-800 hover:border-[#6f00ff]/50' 
+                  : 'bg-white border-slate-100 shadow-sm hover:shadow-xl hover:border-[#6f00ff]/20'
+              }`}>
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 ${
+                  isDarkMode ? 'bg-[#6f00ff]/20 text-[#a855f7]' : 'bg-[#6f00ff]/10 text-[#6f00ff]'
+                }`}>
+                  {card.icon}
+                </div>
+                <h3 className={`text-xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{card.title}</h3>
+                <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                  {card.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- SOLUCIÓN Y PROMESA DE VALOR --- */}
+      <section id="solucion" className={`py-24 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center gap-16">
+            <div className="md:w-1/2">
+              <span className="text-[#6f00ff] font-bold tracking-wider text-sm uppercase">Nuestra Respuesta</span>
+              <h2 className={`text-4xl font-bold mt-2 mb-6 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Ecosistema BAZART</h2>
+              <p className={`text-lg mb-6 leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                No prometemos una solución nacional definitiva de la noche a la mañana. Somos un <strong>laboratorio piloto demostrativo</strong> enfocado en Cartagena y Turbaco, diseñado para validar un modelo replicable.
+              </p>
+              
+              <ul className="space-y-6 mt-8">
+                {[
+                  { title: "Formación Aplicada", desc: "12 eventos prácticos enfocados en derechos, QA y contratos." },
+                  { title: "Plataforma Base", desc: "Infraestructura digital para registro, portafolio y trazabilidad." },
+                  { title: "Tracción de Demanda", desc: "Conexión con el sector turismo bajo estándares éticos." }
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-start group">
+                    <div className={`mt-1 mr-4 shrink-0 w-6 h-6 rounded-full flex items-center justify-center border ${
+                      isDarkMode ? 'border-[#6f00ff] text-[#6f00ff]' : 'border-[#6f00ff] text-[#6f00ff]'
+                    }`}>
+                      <CheckCircle size={14} />
+                    </div>
+                    <div>
+                      <strong className={`block text-lg ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{item.title}</strong>
+                      <span className={isDarkMode ? 'text-slate-500' : 'text-slate-500'}>{item.desc}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="md:w-1/2 relative">
+               <div className="relative p-10 rounded-3xl shadow-2xl border overflow-hidden">
+                 {/* Background Gradient for Card */}
+                 <div className={`absolute inset-0 ${isDarkMode ? 'bg-slate-900' : 'bg-slate-900'}`}></div>
+                 
+                 <div className="relative z-10 text-white">
+                    <h3 className="text-2xl font-bold mb-6 border-b border-white/10 pb-4">La Hipótesis del Piloto</h3>
+                    <p className="italic text-slate-300 text-lg mb-8 font-light">
+                      "Si fortalecemos capacidades, habilitamos una plataforma de trazabilidad y activamos espacios de mercado ético con estándares mínimos..."
+                    </p>
+                    <div className="bg-[#6f00ff] p-6 rounded-2xl">
+                      <p className="font-bold text-white mb-1">Entonces:</p>
+                      <p className="text-white/90">Los beneficiarios mejorarán sus condiciones de trabajo, su remuneración y su libertad para crear.</p>
+                    </div>
+                 </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- ENTREGABLES ESTRATÉGICOS (LEGADO) --- */}
+      <section className="py-24 bg-[#0f0a1e] text-white relative overflow-hidden">
+        {/* Abstract Background Shapes */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-30 pointer-events-none">
+           <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#6f00ff] rounded-full blur-[120px]"></div>
+           <div className="absolute bottom-0 right-0 w-96 h-96 bg-amber-500 rounded-full blur-[120px] opacity-50"></div>
+        </div>
+
+        <div className="container mx-auto px-6 text-center relative z-10">
+          <h2 className="text-3xl font-bold mb-16">El Legado del Proyecto (Entregables)</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { icon: <BookOpen size={32} />, title: "Bazart Toolkit", desc: "Manuales prácticos para Artistas y Tractores." },
+              { icon: <Shield size={32} />, title: "Protocolo de Feria", desc: "Modelo estandarizado para eventos éticos." },
+              { icon: <Globe size={32} />, title: "Manual Territorial", desc: "Guía para replicar el modelo en otros municipios." },
+              { icon: <CheckCircle size={32} />, title: "Sistema de Sellos", desc: "Mecanismo de verificación para compradores." }
+            ].map((item, idx) => (
+              <div key={idx} className="p-8 border border-white/10 bg-white/5 rounded-2xl hover:bg-white/10 hover:border-[#6f00ff]/50 transition-all backdrop-blur-sm group">
+                <div className="mx-auto text-[#6f00ff] mb-6 group-hover:scale-110 transition-transform duration-300">{item.icon}</div>
+                <h4 className="font-bold text-lg mb-3">{item.title}</h4>
+                <p className="text-slate-400 text-sm">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- SOSTENIBILIDAD --- */}
+      <section id="sostenibilidad" className={`py-24 ${isDarkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row-reverse items-center gap-12">
+             <div className="md:w-1/2">
+                <h2 className={`text-3xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Sostenibilidad Real: <br/>El Rol de los Tractores</h2>
+                <p className={`mb-8 leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                  No dependemos solo de fondos públicos. Activamos la demanda privada (Turismo, Educación, Empresas) mediante incentivos claros.
+                </p>
+                <div className={`p-8 rounded-2xl shadow-sm border ${
+                  isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-amber-100'
+                }`}>
+                  <h4 className="font-bold text-amber-500 mb-2 flex items-center text-lg">
+                    <TrendingUp className="mr-3" size={24}/> Sello Aliado Cultural Bazart
+                  </h4>
+                  <p className={`text-sm mb-6 ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                    Un distintivo para empresas que se adhieren al <strong>Estándar Mínimo de Contratación Justa</strong>.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {['Acceso a Talento Curado', 'Marketing Responsable', 'Seguridad Jurídica'].map(tag => (
+                      <span key={tag} className={`text-xs px-3 py-1.5 rounded-full font-medium ${
+                        isDarkMode ? 'bg-slate-700 text-slate-300' : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+             </div>
+             
+             {/* Grid Visual de Tractores */}
+             <div className="md:w-1/2 grid grid-cols-2 gap-4">
+               {['Hoteles Boutique', 'Festivales', 'Agencias de Viaje', 'Cajas de Comp.'].map((label, idx) => (
+                 <div key={idx} className={`h-32 rounded-2xl flex items-center justify-center font-semibold border border-dashed transition-all hover:scale-105 cursor-default ${
+                   isDarkMode 
+                     ? 'bg-slate-950 border-slate-800 text-slate-500' 
+                     : 'bg-white border-slate-200 text-slate-400 shadow-sm'
+                 }`}>
+                   {label}
+                 </div>
+               ))}
+             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- ALIADOS --- */}
+      <section id="aliados" className={`py-24 ${isDarkMode ? 'bg-slate-950' : 'bg-white'}`}>
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className={`text-3xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Gobernanza y Alianzas</h2>
+            <p className={`max-w-2xl mx-auto ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+              Guía2 actúa como garante y owner del proceso. Los aliados participan con roles específicos para asegurar la ejecución disciplinada del piloto.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {/* Academia */}
+            <div className="space-y-6">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-3">Academia e Investigación</h3>
+              {[
+                { name: "Universidad de Cartagena", role: "Aliado Académico Ancla", desc: "Diseño curricular, medición y espacios." },
+                { name: "UNIBAC", role: "Aliado de Artes y Calidad", desc: "Talleres artísticos y curaduría de portafolios." },
+                { name: "Los Libertadores", role: "Aliado Emprendimiento", desc: "Modelos de sostenibilidad y habilidades digitales." }
+              ].map((ally, i) => (
+                <div key={i} className="flex items-start group">
+                  <div className="w-1.5 h-full min-h-[40px] bg-[#6f00ff] mr-4 rounded-full opacity-30 group-hover:opacity-100 transition-opacity"></div>
+                  <div>
+                    <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{ally.name}</h4>
+                    <p className="text-xs text-amber-500 font-bold mb-1">{ally.role}</p>
+                    <p className={`text-xs ${isDarkMode ? 'text-slate-500' : 'text-slate-500'}`}>{ally.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Sector Privado */}
+            <div className="space-y-6">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-3">Empresa y Demanda</h3>
+              {[
+                { name: "Telecso S.A.S.", role: "Patrocinador Ruta Kuida", desc: "Formalización y sistemas de gestión de calidad." },
+                { name: "Cámara de Comercio", role: "Tracción de Mercado", desc: "Conexión con clústeres empresariales." },
+                { name: "Paseo de la Castellana", role: "Vitrina Comercial", desc: "Sede de eventos y showcases." }
+              ].map((ally, i) => (
+                <div key={i} className="flex items-start group">
+                  <div className="w-1.5 h-full min-h-[40px] bg-amber-500 mr-4 rounded-full opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                  <div>
+                    <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{ally.name}</h4>
+                    <p className="text-xs text-amber-500 font-bold mb-1">{ally.role}</p>
+                    <p className={`text-xs ${isDarkMode ? 'text-slate-500' : 'text-slate-500'}`}>{ally.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Institucional */}
+            <div className="space-y-6">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-3">Institucional y Social</h3>
+              {[
+                { name: "IPCC / Secretaría Cultura", role: "Articulación Pública", desc: "Permisos, difusión y legitimidad territorial." },
+                { name: "El Teatrino / Rureli", role: "Aliados de Base", desc: "Acceso comunitario y acompañamiento." },
+                { name: "Museo Histórico (MUHCA)", role: "Escenario Ancla", desc: "Espacios patrimoniales y visibilidad." }
+              ].map((ally, i) => (
+                <div key={i} className="flex items-start group">
+                  <div className="w-1.5 h-full min-h-[40px] bg-emerald-500 mr-4 rounded-full opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                  <div>
+                    <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>{ally.name}</h4>
+                    <p className="text-xs text-amber-500 font-bold mb-1">{ally.role}</p>
+                    <p className={`text-xs ${isDarkMode ? 'text-slate-500' : 'text-slate-500'}`}>{ally.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- FOOTER --- */}
+      <footer className={`py-12 border-t ${isDarkMode ? 'bg-slate-950 border-slate-900 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+        <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+          <div className="mb-6 md:mb-0">
+            <span className={`font-bold text-2xl tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+              BAZART<span className="text-[#6f00ff]">.ECO</span>
+            </span>
+            <p className="text-sm mt-2 max-w-xs">
+              Proyecto en postulación a la Convocatoria UNESCO-Aschberg 2025. Track 2: Organizaciones de la Sociedad Civil.
+            </p>
+          </div>
+          <div className="flex gap-6 text-sm">
+            <a href="#" className="hover:text-[#6f00ff] transition-colors">Contacto</a>
+            <a href="#" className="hover:text-[#6f00ff] transition-colors">Descargar Presentación</a>
+            <a href="#" className="hover:text-[#6f00ff] transition-colors">Privacidad</a>
+          </div>
+        </div>
+        <div className="container mx-auto px-6 mt-8 text-center text-xs opacity-60">
+          <p>© 2026 Guía2. Todos los derechos reservados. Diseñado bajo lineamientos UNESCO 2005.</p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default BazartLanding;
